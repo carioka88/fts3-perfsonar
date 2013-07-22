@@ -20,7 +20,7 @@ FileProcess::~FileProcess() {
 	// Auto-generated destructor stub
 }
 
-void FileProcess::readFileJson(stringstream stringFile){
+void FileProcess::readFileJson(stringstream& stringFile){
 
 	boost::property_tree::ptree pt;
 	boost::property_tree::read_json(stringFile,  pt);

@@ -37,7 +37,7 @@ public:
 	 @brief Read a JsonFile
 	 @param ptFile: ptree to read all the Json tree
 	 */
-	void readFileJson(stringstream stringFile);
+	void readFileJson(stringstream& stringFile);
 
 	/**
 	 @brief Calculate the throughput pushing
