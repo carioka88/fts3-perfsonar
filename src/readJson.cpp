@@ -30,7 +30,6 @@ int main(int argc, char** argv){
 	        boost::property_tree::ptree pt;
 	        boost::property_tree::read_json(fileToRead,  pt);
 
-	        //boost::property_tree::read_json(argv[1],  pt);
 	        readFileJson(pt, fileData);	//Read the file
 
 	        cout << "The average time for pushing is: " << getTimePushing(fileData);
@@ -46,7 +45,6 @@ int main(int argc, char** argv){
 		cout << "Need the file json to read" << endl;
 		return 0;
 	}
-
 	return 0;
 }
 
