@@ -22,8 +22,7 @@
 #endif
 #include <boost/foreach.hpp>
 
-using boost::property_tree::ptree;
-class manageJson {
+class ManageJson {
 
 public:
 	struct parameters{
@@ -69,23 +68,27 @@ public:
 		void setDestination(std::string ss){ destination = ss;}*/
 	};
 
+private:
 	summaryJson myInfo;
 
+public:
 	/**
 	 @brief Default constructor
 	 */
-	manageJson();
+	ManageJson();
 
 	/**
 	 @brief Default destructor
 	 */
-	virtual ~manageJson();
+	virtual ~ManageJson();
 
 	/**
 	 @brief Constructor with parameters
 	 @param newInfo: SummaryJson information
 	 */
-	manageJson(summaryJson newInfo);
+	ManageJson(summaryJson newInfo);
+
+	ManageJson::summaryJson getStructure();
 
 	/**
 	 @brief Modifies a summaryJson
@@ -96,19 +99,37 @@ public:
 	/**
 	 @brief Print all the values of a manageJson
 	 */
-	void printInfo();
+	friend std::ostream& operator<<(std::ostream& out, ManageJson& fp);
 
 	/**
 	 @brief Check if the summary of a manageJson is "PS_CHECK_THROUGHPUT OK"
 	 @return true if the Summary is "PS_CHECK_THROUGHPUT OK", false if it is not
 	 */
-	bool checkSummary();
+	bool isThroughput();
 
 	/**
 	 @brief Check if the source and monitor are the same, is pushing or pulling data.
 	 @return true if the source and monitor are the same(pushing data), false if they are not (pulling data)
 	 */
-	bool checkPushPull();
+	bool isPushorPull();
+
+	/**
+	 @brief Get the monitor's summaryJson
+	 @return the monitor's summaryJson
+	 */
+	std::string getMonitor();
+
+	/**
+	 @brief Get the source's summaryJson
+	 @return the source's summaryJson
+	 */
+	std::string getSource();
+
+	/**
+	 @brief Get the destination's summaryJson
+	 @return the destination's summaryJson
+	 */
+	std::string getDestination();
 
 	/**
 	 @brief Get the average throughput value of a manageJson
@@ -116,6 +137,17 @@ public:
 	 */
 	float getAvg();
 
+	/**
+	 @brief Get the maximum throughput value of a manageJson
+	 @return a float, the maximum
+	 */
+	float getMax();
+
+	/**
+	 @brief Get the minimum throughput value of a manageJson
+	 @return a float, the minimum
+	 */
+	float getMin();
 };
 
 #endif /* MANAGEJSON_H_ */

@@ -7,6 +7,7 @@
 
 #include "FileProcess.h"
 #include "ManageJson.h"
+
 using boost::property_tree::ptree;
 using namespace std;
 
@@ -20,12 +21,17 @@ FileProcess::~FileProcess() {
 	// Auto-generated destructor stub
 }
 
-void FileProcess::readFileJson(stringstream& stringFile){
+void FileProcess::parserJson(string stringFile){
 
 	boost::property_tree::ptree pt;
-	boost::property_tree::read_json(stringFile,  pt);
+	std::stringstream fileToRead;
+
+	fileToRead << "{\"root\":" << stringFile << "}";
+
+	boost::property_tree::read_json(fileToRead,  pt);
+
 	BOOST_FOREACH(boost::property_tree::ptree::value_type &v, pt.get_child("root")){
-		manageJson::summaryJson arrayJson;
+		ManageJson::summaryJson arrayJson;
 
 		arrayJson.summary_File = v.second.get<std::string>("summary");
 		arrayJson.id_File = v.second.get("id",0);
@@ -51,26 +57,27 @@ void FileProcess::readFileJson(stringstream& stringFile){
 		arrayJson.sigma_File.description = v.second.get<string>("parameters.Sigma.description");
 		arrayJson.sigma_File.value = v.second.get<float>("parameters.Sigma.value");
 
-		manageJson infoJson(arrayJson);
+		ManageJson infoJson(arrayJson);
 		this->fileData.push_back(infoJson);
 	}
 }
 
-void FileProcess::print()
-{
-    list<manageJson>::iterator tmpIterator;
-	for ( tmpIterator = this->fileData.begin(); tmpIterator != this->fileData.end(); tmpIterator++){
-		tmpIterator->printInfo();
+std::ostream& operator<<(std::ostream &out, FileProcess& fp){
+	list<ManageJson>::iterator tmpIterator;
+
+	for ( tmpIterator = fp.fileData.begin(); tmpIterator != fp.fileData.end(); tmpIterator++){
+		ManageJson auxToPrint(tmpIterator->getStructure());
+		out << auxToPrint;
 	}
-	cout << endl;
+	return out;
 }
 
 float FileProcess::getThroughputPushing(){
-	list<manageJson>::iterator tmpIterator;
+	list<ManageJson>::iterator tmpIterator;
 	float avg = -1;
 
 	for ( tmpIterator = this->fileData.begin(); tmpIterator != this->fileData.end(); tmpIterator++){
-		if(tmpIterator->checkSummary() && tmpIterator->checkPushPull()){
+		if(tmpIterator->isThroughput() && tmpIterator->isPushorPull()){
 			avg = tmpIterator->getAvg();
 		}
 	}
@@ -78,11 +85,11 @@ float FileProcess::getThroughputPushing(){
 }
 
 float FileProcess::getThroughputPulling(){
-	list<manageJson>::iterator tmpIterator;
+	list<ManageJson>::iterator tmpIterator;
 	float avg = -1;
 
 	for ( tmpIterator = this->fileData.begin(); tmpIterator != this->fileData.end(); tmpIterator++){
-		if(tmpIterator->checkSummary() && !tmpIterator->checkPushPull()){
+		if(tmpIterator->isThroughput() && !tmpIterator->isPushorPull()){
 			avg = tmpIterator->getAvg();
 		}
 	}

@@ -7,29 +7,15 @@
 
 #ifndef FILEPROCESS_H_
 #define FILEPROCESS_H_
-#include <iostream>
-#include <fstream>
-#include <stdio.h>
-#include <list>
-#include <string.h>
-#include <exception>
-#include <boost/array.hpp>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
-#ifdef _MSC_VER
-#include <boost/config/compiler/visualc.hpp>
-#endif
-#include <boost/foreach.hpp>
 
 #include "ManageJson.h"
 
-using boost::property_tree::ptree;
-using namespace std;
 
 class FileProcess {
-public:
-	list<manageJson> fileData;
+private:
+	std::list<ManageJson> fileData;
 
+public:
 	FileProcess();
 	virtual ~FileProcess();
 
@@ -37,7 +23,7 @@ public:
 	 @brief Read a JsonFile
 	 @param ptFile: ptree to read all the Json tree
 	 */
-	void readFileJson(stringstream& stringFile);
+	void parserJson(std::string stringFile);
 
 	/**
 	 @brief Calculate the throughput pushing
@@ -54,7 +40,7 @@ public:
 	/**
 	 @brief Print the information of a list of manageJson that contains information of a Json's file
 	 */
-	void print();
+	friend std::ostream& operator<<(std::ostream &out, FileProcess& fp);
 };
 
 #endif /* FILEPROCESS_H_ */
