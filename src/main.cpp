@@ -1,5 +1,6 @@
-#include "ManageJson.h"
-#include "FileProcess.h"
+#include "UtilsJson.h"
+#include "UtilsPerfSonar.h"
+#include "TransferServiceClientData.h"
 
 using namespace std;
 
@@ -16,18 +17,15 @@ int main(int argc, char** argv){
 		while(getline(file, line))
 			stringFile += line + "\n";
 
-		FileProcess fileData;
+		string url = "http://perfsonar.racf.bnl.gov:8080/exda";
+		TransferServiceClientData infoPerfSonar;
+		UtilsPerfSonar fileData = infoPerfSonar.getInfoPerfSonar("lhcmon.bnl.gov", "psmsu02.aglt2.org", url);
+
 		try{
-	        fileData.parserJson(stringFile);	//Read the file
 
-	        cout << "The average time for pushing is: " << fileData.getThroughputPushing();
-	        cout << endl;
-	        cout << "The average time for pulling is: " << fileData.getThroughputPulling();
+	        cout << "The average throughput for pushing is: " << fileData.getThroughputPushing() << endl;
+	        cout << "The average throughput for pulling is: " << fileData.getThroughputPulling() << endl;
 
-	        cout << endl;
-
-	        //print the Json info
-	        //cout << fileData;
 		}
 		catch(exception &e){
 			cout << "Error" << e.what() << endl;
