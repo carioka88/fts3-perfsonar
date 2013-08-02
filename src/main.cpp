@@ -1,40 +1,34 @@
+#include "INetworkLink.h"
+#include "TcpOptimizer.h"
 #include "UtilsJson.h"
 #include "UtilsPerfSonar.h"
-#include "TransferServiceClientData.h"
-
+#include <list>
 using namespace std;
 
 int main(int argc, char** argv){
-	if(argc == 2){
-		ifstream file(argv[1]);
 
-		if(!file)
-		{
-			cout << "File open error: " << argv[1] << endl;
-	                return 1;
-		}
-		string line, stringFile;
-		while(getline(file, line))
-			stringFile += line + "\n";
 
-		string url = "http://perfsonar.racf.bnl.gov:8080/exda";
-		TransferServiceClientData infoPerfSonar;
-		UtilsPerfSonar fileData = infoPerfSonar.getInfoPerfSonar("lhcmon.bnl.gov", "psmsu02.aglt2.org", url);
+	//list<IInfoPointToPoint> ListTCP;
+	TcpOptimizer tcpBuffer;
 
-		try{
+	UtilsPerfSonar fileData = UtilsPerfSonar();
 
-	        cout << "The average throughput for pushing is: " << fileData.getThroughputPushing() << endl;
-	        cout << "The average throughput for pulling is: " << fileData.getThroughputPulling() << endl;
+	tcpBuffer.saveNetInfo(fileData.getInfo("lhcmon.bnl.gov", "psmsu02.aglt2.org"));
 
-		}
-		catch(exception &e){
-			cout << "Error" << e.what() << endl;
-		}
+
+
+	//struct NetworkLinkInfo auxInfoLink = fileData.getInfo();
+	//fileData.getInfo();
+
+	try{
+		cout << "The TCP buffer size is: " << tcpBuffer.optimizeTCP(true) << endl;
+		cout << "The TCP buffer size is: " << tcpBuffer.optimizeTCP(false) << endl;
+		cout << "The throughput pushing is: " << fileData.getThroughputPushing() << endl;
+		cout << "The throughput pulling is: " << fileData.getThroughputPulling() << endl;
+
 	}
-	else{
-		cout << "Need the file json to read" << endl;
-		return 0;
+	catch(exception &e){
+		cout << "Error" << e.what() << endl;
 	}
-	return 0;
 }
 
