@@ -19,7 +19,6 @@ INetworkLink::~INetworkLink() {
 	// Auto-generated destructor stub
 }
 
-//IInfoPointToPoint::IInfoPointToPoint(std::string source, std::string dest) {
-//	this->myInfoBufferTCP.origin = source;
-//	this->myInfoBufferTCP.destination = dest;
-//}
+INetworkLink::NetworkLinkInfo INetworkLink::getLinkStruct(){
+	return this->myInfoBufferTCP;
+}

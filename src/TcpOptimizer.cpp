@@ -7,17 +7,27 @@
 
 #include "TcpOptimizer.h"
 
+TcpOptimizer* TcpOptimizer::myInstance = 0;
+
 TcpOptimizer::TcpOptimizer() {
 	// Auto-generated constructor stub
 }
 
 TcpOptimizer::~TcpOptimizer() {
-	//Auto-generated destructor stub
+	delete [] myInstance;
 }
 
-void TcpOptimizer::saveNetInfo(INetworkLink::NetworkLinkInfo net){
-	this->listNetworks.push_back(net);
+TcpOptimizer* TcpOptimizer::getInstance(){
+	if(myInstance == 0){
+		myInstance = new TcpOptimizer;
+	}
+	return myInstance;
 }
+
+void TcpOptimizer::registerNetInfo(INetworkLink *net){
+	this->listNetworks.push_back(net->getLinkStruct());
+}
+
 float TcpOptimizer::optimizeTCP(bool isPush){
 	float finalTCP = 0;
 	float bandwidth = 0;
@@ -38,8 +48,17 @@ float TcpOptimizer::optimizeTCP(bool isPush){
 		}
 	}
 
-	finalTCP = (bandwidth/this->listNetworks.size())*(rtt/this->listNetworks.size())/8;
-
+	finalTCP = 1024*1024*(bandwidth/this->listNetworks.size())*(rtt/this->listNetworks.size())/8;
 	return finalTCP;
 }
 
+void TcpOptimizer::printListNet(){
+
+	std::list<INetworkLink::NetworkLinkInfo>::iterator tmpIterator;
+
+	for ( tmpIterator = this->listNetworks.begin(); tmpIterator != this->listNetworks.end(); tmpIterator++){
+		std::cout << "pushing: " << tmpIterator->throughPushing << std::endl;
+		std::cout << "RTT: " << tmpIterator->RTT << std::endl;
+	}
+
+}
